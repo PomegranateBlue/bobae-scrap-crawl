@@ -1,13 +1,24 @@
 import XLSX from "xlsx";
-import fs from "fs";
 import path from "path";
 
 /**
- * 컬렉션 데이터를 Excel 파일로 내보내기
- * @param {Array<{title: string, url: string}>} collections - 컬렉션 배열
- * @param {string} filename - 저장할 파일명 (기본값: "instagram_collections.xlsx")
+ * 컬렉션 인터페이스
  */
-export function exportToExcel(collections, filename = "instagram_collections.xlsx") {
+export interface Collection {
+  title: string;
+  url: string;
+}
+
+/**
+ * 컬렉션 데이터를 Excel 파일로 내보내기
+ * @param collections - 컬렉션 배열
+ * @param filename - 저장할 파일명 (기본값: "instagram_collections.xlsx")
+ * @returns 저장된 파일 경로
+ */
+export function exportToExcel(
+  collections: Collection[],
+  filename: string = "instagram_collections.xlsx"
+): string {
   try {
     // 1. 데이터를 Excel 형식으로 변환
     const worksheetData = [
@@ -48,9 +59,9 @@ export function exportToExcel(collections, filename = "instagram_collections.xls
 
 /**
  * 타임스탬프가 포함된 파일명 생성
- * @returns {string} - "instagram_collections_20231218_143022.xlsx" 형식
+ * @returns "instagram_collections_20231218_143022.xlsx" 형식의 파일명
  */
-export function generateTimestampFilename() {
+export function generateTimestampFilename(): string {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");

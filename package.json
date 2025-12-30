@@ -109,12 +109,17 @@
     "yn": "^3.1.1"
   },
   "scripts": {
-    "start": "node app.js",
-    "scrape": "node app.js",
+    "start": "tsx index.ts",
+    "scrape": "tsx index.ts",
+    "dev": "tsx watch index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0"
+  }
 }

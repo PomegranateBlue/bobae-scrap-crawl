@@ -1,13 +1,7 @@
 import puppeteer from "puppeteer";
 import dotenv from "dotenv";
-// import { autoScroll } from "./autoScroll.js";  // 기존 방식 (미사용)
 import { autoScrollAndScrape } from "./autoScrollAndScrape.js";
 import { login } from "./login.js";
-import {
-  // scrapeCollections,  // 기존 방식 (미사용)
-  COLLECTION_LINK_SELECTOR,
-  COLLECTION_TITLE_SELECTOR,
-} from "./scrapeCollections.js";
 import { exportToExcel, generateTimestampFilename } from "./exportToExcel.js";
 
 dotenv.config();
@@ -17,10 +11,14 @@ const USERNAME = process.env.INSTA_ID;
 const PASSWORD = process.env.INSTA_PW;
 const TARGET_SAVED_URL = `https://www.instagram.com/bobaebike/saved/`;
 
+// 셀렉터 상수
+const COLLECTION_LINK_SELECTOR = 'a[href*="/saved/"][role="link"][tabindex="0"]';
+const COLLECTION_TITLE_SELECTOR = "h3 span";
+
 /**
  * 메인 함수: 인스타그램 저장된 컬렉션 스크래핑
  */
-async function scrapeSavedCollections() {
+async function scrapeSavedCollections(): Promise<void> {
   // 환경 변수 검증
   if (!USERNAME || !PASSWORD) {
     console.error("오류: .env 파일에 INSTA_ID 또는 INSTA_PW를 설정해주세요.");
@@ -44,23 +42,19 @@ async function scrapeSavedCollections() {
     await page.goto(TARGET_SAVED_URL);
     await page.waitForSelector(COLLECTION_LINK_SELECTOR);
 
-    // 3. 스크롤하면서 실시간 스크래핑 (개선된 방식)
+    // 3. 스크롤하면서 실시간 스크래핑
     const collections = await autoScrollAndScrape(
       page,
       COLLECTION_LINK_SELECTOR,
       COLLECTION_TITLE_SELECTOR
     );
 
-    // 또는 기존 방식 사용 (주석 처리됨):
-    // await autoScroll(page);
-    // const collections = await scrapeCollections(page);
-
-    // 5. 결과 출력
+    // 4. 결과 출력
     console.log("\n--- 추출된 컬렉션 목록 ---");
     collections.forEach((c) => console.log(`제목: ${c.title}, URL: ${c.url}`));
     console.log(`총 ${collections.length}개의 컬렉션이 추출되었습니다.`);
 
-    // 6. Excel 파일로 내보내기
+    // 5. Excel 파일로 내보내기
     const filename = generateTimestampFilename();
     exportToExcel(collections, filename);
   } catch (error) {

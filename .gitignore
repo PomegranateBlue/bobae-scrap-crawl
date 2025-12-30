@@ -1,1 +1,16 @@
+# 환경변수
 .env
+
+# 의존성
+node_modules/
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# Excel 출력 파일
+*.xlsx
+
+# 시스템 파일
+.DS_Store
+Thumbs.db

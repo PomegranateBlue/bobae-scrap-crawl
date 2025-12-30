@@ -1,18 +1,25 @@
+import { Page } from "puppeteer";
+import { Collection } from "./exportToExcel.js";
+
 /**
  * 스크롤하면서 컬렉션을 실시간으로 수집하는 함수
  * Virtual Scrolling 문제를 해결하여 모든 컬렉션을 캡처
- * @param {Page} page - Puppeteer 페이지 객체
- * @param {string} linkSelector - 컬렉션 링크 셀렉터
- * @param {string} titleSelector - 컬렉션 제목 셀렉터
- * @returns {Promise<Array<{title: string, url: string}>>} 수집된 컬렉션 배열
+ * @param page - Puppeteer 페이지 객체
+ * @param linkSelector - 컬렉션 링크 셀렉터
+ * @param titleSelector - 컬렉션 제목 셀렉터
+ * @returns 수집된 컬렉션 배열
  */
-export async function autoScrollAndScrape(page, linkSelector, titleSelector) {
+export async function autoScrollAndScrape(
+  page: Page,
+  linkSelector: string,
+  titleSelector: string
+): Promise<Collection[]> {
   console.log("스크롤하면서 실시간으로 컬렉션을 수집합니다...");
 
   const collections = await page.evaluate(
-    async (linkSel, titleSel) => {
+    async (linkSel: string, titleSel: string): Promise<Collection[]> => {
       return new Promise((resolve) => {
-        const collectionMap = new Map(); // URL 기준 중복 제거
+        const collectionMap = new Map<string, Collection>(); // URL 기준 중복 제거
         let unchangedCount = 0;
         let previousHeight = document.body.scrollHeight;
         let scrapedCount = 0;
@@ -22,9 +29,9 @@ export async function autoScrollAndScrape(page, linkSelector, titleSelector) {
           const collectionLinks = document.querySelectorAll(linkSel);
 
           Array.from(collectionLinks).forEach((linkNode) => {
-            const url = linkNode.href;
+            const url = (linkNode as HTMLAnchorElement).href;
             const titleElement = linkNode.querySelector(titleSel);
-            const title = titleElement ? titleElement.textContent.trim() : "";
+            const title = titleElement ? titleElement.textContent?.trim() : "";
 
             // 유효한 컬렉션 URL 필터링
             const urlParts = url.split("/saved/");

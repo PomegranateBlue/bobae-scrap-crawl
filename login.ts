@@ -1,15 +1,21 @@
+import { Page } from "puppeteer";
+
 export const LOGIN_URL = "https://www.instagram.com/accounts/login/";
 export const ID_INPUT_SELECTOR = 'input[name="username"]';
 export const PW_INPUT_SELECTOR = 'input[name="password"]';
 export const LOGIN_BUTTON_SELECTOR = 'button[type="submit"]';
 
 /**
- *
- * @param {Page} page
- * @param {string} username
- * @param {string} password
+ * 인스타그램 로그인 함수
+ * @param page - Puppeteer 페이지 객체
+ * @param username - 인스타그램 사용자명
+ * @param password - 인스타그램 비밀번호
  */
-export async function login(page, username, password) {
+export async function login(
+  page: Page,
+  username: string,
+  password: string
+): Promise<void> {
   console.log("로그인 시도 중...");
 
   await page.goto(LOGIN_URL);
