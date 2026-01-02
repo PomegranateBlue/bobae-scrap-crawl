@@ -11,11 +11,11 @@ export const LOGIN_BUTTON_SELECTOR = 'button[type="submit"]';
  * @param username - 인스타그램 사용자명
  * @param password - 인스타그램 비밀번호
  */
-export async function login(
+export const loginBobaebike = async (
   page: Page,
   username: string,
   password: string
-): Promise<void> {
+): Promise<void> => {
   console.log("로그인 시도 중...");
 
   await page.goto(LOGIN_URL);
@@ -28,4 +28,4 @@ export async function login(
   await page.waitForNavigation();
 
   console.log("로그인 성공!");
-}
+};

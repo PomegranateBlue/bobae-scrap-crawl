@@ -89,8 +89,8 @@ npm run dev
 
 ### Excel 파일 구조
 
-| 제목 | URL |
-|------|-----|
+| 제목          | URL                           |
+| ------------- | ----------------------------- |
 | 컬렉션 제목 1 | https://www.instagram.com/... |
 | 컬렉션 제목 2 | https://www.instagram.com/... |
 
@@ -101,19 +101,21 @@ npm run dev
 인스타그램은 Virtual Scrolling을 사용하여 DOM에서 보이지 않는 요소를 제거합니다. 이 문제를 해결하기 위해:
 
 1. **스크롤 중 실시간 스크래핑**: 300px씩 스크롤할 때마다 현재 화면의 컬렉션을 수집
-2. **Map 기반 중복 제거**: URL을 키로 사용하여 중복된 컬렉션 자동 필터링
+2. **Map 기반 중복 제거**: URL을 키로 사용하여 중복된 컬렉션 자동 필터링, 현재 중복 제거 후에도 실제
+   데이터 수와 일치하지 않는 문제 발생
 3. **종료 조건**: 페이지 높이가 10번 연속 변하지 않으면 스크래핑 완료
 
 ```typescript
 // 핵심 로직 (autoScrollAndScrape.ts)
 const scrollInterval = setInterval(() => {
-  scrapeCurrentView();  // 현재 화면 스크래핑
-  window.scrollBy(0, 300);  // 300px 스크롤
+  scrapeCurrentView();
+  window.scrollBy(0, 300); // 300px 스크롤
 
-  if (unchangedCount >= 10) {  // 종료 조건
+  if (unchangedCount >= 10) {
+    // 종료 조건
     resolve(Array.from(collectionMap.values()));
   }
-}, 2000);  // 2초 간격
+}, 2000); // 2초 간격, 실제 데이터와 다를 경우 간격 조정할 것
 ```
 
 ## 타입 정의
@@ -122,8 +124,8 @@ const scrollInterval = setInterval(() => {
 
 ```typescript
 export interface Collection {
-  title: string;  // 컬렉션 제목
-  url: string;    // 컬렉션 URL
+  title: string; // 컬렉션 제목
+  url: string; // 컬렉션 URL
 }
 ```
 
@@ -142,15 +144,8 @@ export interface Collection {
 ### Selector 오류
 
 인스타그램 UI가 변경된 경우:
+
 - [index.ts:14-15](index.ts#L14-L15)의 셀렉터 값을 업데이트해야 할 수 있습니다
-
-## 개발 계획
-
-- [ ] CLI 옵션 추가 (사용자명 지정, 출력 경로 등)
-- [ ] 에러 처리 개선 (재시도 로직)
-- [ ] 로깅 시스템 도입
-- [ ] 테스트 코드 작성
-- [ ] 진행률 표시 개선
 
 ## 라이선스
 
@@ -165,3 +160,7 @@ ISC
 - 이 도구는 개인적인 용도로만 사용하세요
 - 인스타그램 서비스 약관을 준수하세요
 - 과도한 스크래핑은 계정 제한을 초래할 수 있습니다
+
+### 남은 과제
+
+/saved 경로에 존재하는 개별 컬렉션으로 이동 후, 저장된 게시물 스크랩, URL 스크랩

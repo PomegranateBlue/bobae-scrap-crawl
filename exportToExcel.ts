@@ -61,7 +61,7 @@ export function exportToExcel(
  * 타임스탬프가 포함된 파일명 생성
  * @returns "instagram_collections_20231218_143022.xlsx" 형식의 파일명
  */
-export function generateTimestampFilename(): string {
+export const generateTimestampFilename = (): string => {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -71,4 +71,4 @@ export function generateTimestampFilename(): string {
   const second = String(now.getSeconds()).padStart(2, "0");
 
   return `instagram_collections_${year}${month}${day}_${hour}${minute}${second}.xlsx`;
-}
+};
